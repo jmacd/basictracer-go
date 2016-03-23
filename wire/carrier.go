@@ -6,12 +6,14 @@ package wire
 // jsonpb or any other serialization forms they want.
 type ProtobufCarrier TracerState
 
+// SetState set's the tracer state.
 func (p *ProtobufCarrier) SetState(traceID, spanID int64, sampled bool) {
 	p.TraceId = traceID
 	p.SpanId = spanID
 	p.Sampled = sampled
 }
 
+// State returns the tracer state.
 func (p *ProtobufCarrier) State() (traceID, spanID int64, sampled bool) {
 	traceID = p.TraceId
 	spanID = p.SpanId
@@ -19,6 +21,7 @@ func (p *ProtobufCarrier) State() (traceID, spanID int64, sampled bool) {
 	return traceID, spanID, sampled
 }
 
+// SetBaggageItem sets a baggage item.
 func (p *ProtobufCarrier) SetBaggageItem(key, value string) {
 	if p.BaggageItems == nil {
 		p.BaggageItems = map[string]string{key: value}
@@ -28,6 +31,8 @@ func (p *ProtobufCarrier) SetBaggageItem(key, value string) {
 	p.BaggageItems[key] = value
 }
 
+// GetBaggage iterates over each baggage item and executes the callback with
+// the key:value pair.
 func (p *ProtobufCarrier) GetBaggage(f func(k, v string)) {
 	for k, v := range p.BaggageItems {
 		f(k, v)
